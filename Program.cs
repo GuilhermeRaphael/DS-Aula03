@@ -28,6 +28,9 @@ namespace Aula03Colecoes
                 Console.WriteLine("==================================================");
                 Console.WriteLine("---Digite o número referente a opção desejada: ---");
                 Console.WriteLine("1 - Obter Por Id");
+                Console.WriteLine("2 - Adicionar Funcionário");
+                Console.WriteLine("3 - Obter por Id digitado");
+                Console.WriteLine("4 - Obter por salário digitado");
                 Console.WriteLine("==================================================");
                 Console.WriteLine("-----Ou tecle qualquer outro número para sair-----");
                 Console.WriteLine("=================================================="); opcaoEscolhida = int.Parse(Console.ReadLine());
@@ -36,6 +39,19 @@ namespace Aula03Colecoes
                 {
                     case 1:
                         ObterPorId();
+                        break;
+                    case 2:
+                        AdicionarFuncionario();
+                        break;
+                    case 3:
+                        Console.WriteLine("Digite o Id do funcionario que você deseja buscar: ");
+                        int id = int.Parse(Console.ReadLine());
+                        ObterPorIdDigitado(id);
+                        break;
+                    case 4:
+                        Console.WriteLine("Digite o salario para obter todos acima do valor indicado: ");
+                        decimal salario = decimal.Parse(Console.ReadLine());
+                        ObterPorSalario(salario);
                         break;
                     default:
                         Console.WriteLine("Saindo do sistema....");
@@ -129,6 +145,48 @@ namespace Aula03Colecoes
             f6.Salario = 300.000M;
             f6.TipoFuncionario = TipoFuncionarioEnum.CLT;
             lista.Add(f6);
+        }
+
+        public static void AdicionarFuncionario(){
+            Funcionario f = new Funcionario();
+
+            Console.WriteLine("Digite o nome: ");
+            f.Nome = Console.ReadLine();
+
+            Console.WriteLine("Digite o salario: ");
+            f.Salario = decimal.Parse(Console.ReadLine());
+
+            Console.WriteLine("Digite a data de admissao: ");
+            f.DataAdmissao = DateTime.Parse(Console.ReadLine());
+
+            if (string.IsNullOrEmpty(f.Nome))
+            {
+                Console.WriteLine("O nome deve ser preenchido");
+                return;
+            }
+            else if(f.Salario == 0)
+            {
+                Console.WriteLine("Valor do salario nao pode ser 0");
+                return;
+            }
+            else
+            {
+                lista.Add(f);
+                ExibirLista();
+            }
+        }
+
+        public static void ObterPorIdDigitado(int id)
+        {
+            Funcionario fBusca = lista.Find(x => x.Id == id);
+
+            Console.WriteLine($"Personagem encontrado: {fBusca.Nome}");
+        }
+
+        public static void ObterPorSalario(decimal valor)
+        {
+            lista = lista.FindAll(x => x.Salario >= valor);
+            ExibirLista();
         }
     }
 }
