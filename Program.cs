@@ -71,15 +71,7 @@ namespace Aula03Colecoes
                         ObterEstatisticas();
                         break;
                     case 8:
-                        Console.WriteLine("Digite o salario do funcionario: ");
-                        decimal Salario =Convert.ToDecimal(Console.ReadLine());
-                        Console.WriteLine("Digite a data de admissão do funcionario (DD-MM-AAAA): ");
-                        DateTime dataAdmissao = DateTime.Parse(Console.ReadLine());
-                        Funcionario novoFuncionario = new Funcionario{
-                            Salario = Salario,
-                            DataAdmissao = dataAdmissao
-                        };
-                        ValidarAdmissaoFuncionario(novoFuncionario);
+                        ValidarSalarioAdmissao();
                         break;
                     case 9:
                         Console.WriteLine("Digite o nome do funcionario que sera validado: ");
@@ -226,6 +218,8 @@ namespace Aula03Colecoes
             ExibirLista();
         }
 
+        //começo dos exercicios
+
         public static void ObterPorNome(string nomeFuncionario)
         {
             Funcionario  fBuscar = lista.Find(x => x.Nome.Contains(nomeFuncionario));
@@ -236,6 +230,17 @@ namespace Aula03Colecoes
             {
             Console.WriteLine("Não foi possível encontrar o funcionário.");
             }
+
+            // ou 
+
+            /*
+
+            opção para nome completo
+            lista = lista.FindAll(x => x.Nome.ToLower() == nome.ToLower());
+
+            Opção para nome aproximado
+            lista = lista.FindAll(x => x.Nome.ToLower().Contains(nome.ToLower()));
+            */
         }
     
         public static void ObterFuncionarioRecentes()
@@ -253,20 +258,36 @@ namespace Aula03Colecoes
             Console.WriteLine(string.Format("A soma dos salários é  {0:c2}.", somatorio));
         }
 
-        public static void ValidarAdmissaoFuncionario(Funcionario funcionario)
+         public static void ValidarSalarioAdmissao()
+    {
+
+        bool fAdicionado = false;
+
+        while (fAdicionado == false)
         {
-            if(funcionario.Salario<=0){
-                Console.WriteLine("Salario deve ser maior que 0");
-                return;
+            Funcionario f = new Funcionario();
+
+            Console.WriteLine("Digite o nome: ");
+            f.Nome = Console.ReadLine();
+
+            Console.WriteLine("Digite o salário: ");
+            f.Salario = decimal.Parse(Console.ReadLine());
+
+            Console.WriteLine("Digite a data de admissão: ");
+            f.DataAdmissao = DateTime.Parse(Console.ReadLine());
+
+            if (f.DataAdmissao < DateTime.Now.Date || f.Salario == 0M)
+            {
+                Console.WriteLine("A data de admissão não pode ser anterior a hoje e o salário deve ser maior que 0.");
             }
-            if (funcionario.DataAdmissao < DateTime.Now){
-                Console.WriteLine("A data de admissão não pode ser anterior à data atual");
-                return;
-            }
-            else{
-                Console.WriteLine("Funcionario valido");
+            else
+            {
+                fAdicionado = true;
+                lista.Add(f);
             }
         }
+
+    }
 
         public static void ValidarNome(string Nome)
         {
@@ -279,20 +300,14 @@ namespace Aula03Colecoes
         }
         
         public static void ObterPorTipo()
-        {
-            Console.WriteLine("Digite o número do tipo de funcionário (1 - CLT || 2 - Aprendiz)");
-            int tipo = int.Parse(Console.ReadLine());
-            var resultado = lista.Where(f => (int)f.TipoFuncionario == tipo).ToList();
-            if (resultado.Count > 0)
-            {
-                resultado.ForEach(f => Console.WriteLine($"ID: {f.Id}, Nome: {f.Nome}"));
-            }
-            else
-            {
-                Console.WriteLine("Nenhum funcionário encontrado.");
-            }       
-        }
+    {
+        Console.WriteLine("Digite 1 para CLT ou 2 para Aprendiz...");
+        int tipo = int.Parse(Console.ReadLine());
 
+        TipoFuncionarioEnum tipoConvertidoEnum = (TipoFuncionarioEnum)tipo;
+        lista = lista.FindAll(x => x.TipoFuncionario == tipoConvertidoEnum);
+        ExibirLista();
+    }   
 
 
     }
